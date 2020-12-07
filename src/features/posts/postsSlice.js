@@ -5,10 +5,10 @@ import { sub } from 'date-fns'
 const initialState = [
   { id: '1', title: 'First Post!', content: 'Hello!', 
   date: sub(new Date(), { minutes: 10 }).toISOString(),
-  reactions: {thumbsUp:0, hooray:0, heart:0, rocket:0, eyes:0} },
+  reactions: {thumbsUp:1, hooray:2, heart:3, rocket:4, eyes:5} },
   { id: '2', title: 'Second Post', content: 'More text', 
   date: sub(new Date(), { minutes: 5 }).toISOString(),
-  reactions: {thumbsUp:0, hooray:0, heart:0, rocket:0, eyes:0} }
+  reactions: {} }
 ]
 
 const postsSlice = createSlice({
@@ -20,13 +20,11 @@ const postsSlice = createSlice({
       const { postId, reaction } = action.payload
       const existingPost = state.find(post => post.id === postId)
       if (existingPost) {
+        if (existingPost.reactions[reaction] == null){
+          existingPost.reactions[reaction] = 0
+        }
         existingPost.reactions[reaction]++
       }
-    },
-    postAdded1(state, action) { 
-        //will generate action.type 'posts/postAdded1'
-        //will generate action creator, postAdded1, for dispatch(postAdded1(action.payload))
-        state.push(action.payload)
     },
     postAdded2: {
       prepare(title, content, userId) {
@@ -37,15 +35,21 @@ const postsSlice = createSlice({
             content,
             user: userId,
             date: new Date().toISOString(),
+            reactions: {}
           },
           meta: "Some meta data here"
         }
         //action type 'posts/postAdded2' will be added
-      },        
+      },
       reducer(state, action) {
         state.push(action.payload)
       }
-    },    
+    },
+    postAdded1(state, action) { 
+      //will generate action.type 'posts/postAdded1'
+      //will generate action creator, postAdded1, for dispatch(postAdded1(action.payload))
+      state.push(action.payload)
+    },
     postUpdated(state, action) {
         const { id, title, content } = action.payload
         const existingPost = state.find(post => post.id === id)
