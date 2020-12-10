@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom'
 import { PostAuthor } from './PostAuthor'
 import { TimeAgo } from './TimeAgo'
 import { ReactionButtons } from './ReactionButtons'
+import { selectPostById } from './postsSlice'
+import { useSelector } from 'react-redux'
 
-let pe = ({ post }) => {
+//let pe = ({ post }) => {
+let Pe = ({ postId }) => {
+    const post = useSelector(state => selectPostById(state, postId))
+
     return (
         <article className="post-excerpt" key={post.id}>
             <h3>{post.title}</h3>
@@ -18,4 +23,4 @@ let pe = ({ post }) => {
     )
 }
 
-export const PostExcerpt = React.memo(pe)
+export const PostExcerpt = React.memo(Pe)
